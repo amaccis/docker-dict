@@ -1,14 +1,14 @@
-FROM alpine:3.12
+FROM alpine:3.17.2
 
 LABEL maintainer="Andrea Maccis <andrea.maccis@gmail.com>"
 
 COPY docker-source-manager /usr/local/bin
 
-ENV DICTD_VERSION 1.13.0
+ENV DICTD_VERSION 1.13.1
 
 ENV BMKDEP_VERSION 20140112
-ENV BMAKE_VERSION 20200524
-ENV MKCONFIGURE_VERSION 0.34.2
+ENV BMAKE_VERSION 20200710
+ENV MKCONFIGURE_VERSION 0.38.2
 ENV LIBMAA_VERSION 1.4.7
 ENV DICTS_VERSION 2011.03.16
 
@@ -27,7 +27,7 @@ RUN set -eux; \
             gawk \
             bison \
             groff; \
-    # bmkdep
+    # bmkdep \
     mkdir -p /usr/src; \
     cd /usr/src; \
     export BMKDEP_URL="https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/bmkdep/bmkdep-${BMKDEP_VERSION}.tar.gz"; \
@@ -38,7 +38,7 @@ RUN set -eux; \
     cc findcc.c mkdep.c -o mkdep; \
     cp mkdep /usr/local/bin; \
     docker-source-manager bmkdep delete; \
-    # bmake
+    # bmake \
     cd /usr/src; \
     export BMAKE_URL="http://www.crufty.net/ftp/pub/sjg/bmake-${BMAKE_VERSION}.tar.gz"; \
     curl -fsSL -o bmake.tar.gz "$BMAKE_URL"; \
@@ -49,7 +49,7 @@ RUN set -eux; \
     make; \
     cp bmake /usr/local/bin; \
     docker-source-manager bmake delete; \
-    # mk-configure
+    # mk-configure \
     cd /usr/src; \
     export MKCONFIGURE_URL="https://github.com/cheusov/mk-configure/archive/mk-configure-${MKCONFIGURE_VERSION}.tar.gz"; \
     curl -fsSL -o mk-configure.tar.gz "$MKCONFIGURE_URL"; \
@@ -59,7 +59,7 @@ RUN set -eux; \
     touch sys.mk; \
     bmake all; \
     bmake install; \
-    # libmaa
+    # libmaa \
     cd /usr/src; \
     export LIBMAA_URL="https://github.com/cheusov/libmaa/archive/libmaa-${LIBMAA_VERSION}.tar.gz"; \
     curl -fsSL -o libmaa.tar.gz "$LIBMAA_URL"; \
@@ -74,7 +74,7 @@ RUN set -eux; \
     cd /usr/src/mk-configure; \
     bmake uninstall; \
     docker-source-manager mk-configure delete; \
-    # dictd
+    # dictd \
     cd /usr/src; \
     export DICTD_URL="https://github.com/cheusov/dictd/archive/${DICTD_VERSION}.tar.gz"; \
     curl -fsSL -o dictd.tar.gz "$DICTD_URL"; \
@@ -90,7 +90,7 @@ RUN set -eux; \
     make install.dictd; \
     cp examples/dictd1.conf /etc/dictd.conf; \
     docker-source-manager dictd delete; \
-    # dictd-dicts
+    # dictd-dicts \
     cd /usr/src; \
     export DICTS_URL="https://github.com/ferdnyc/dictd-dicts/archive/snap.${DICTS_VERSION}.tar.gz"; \
     curl -fsSL -o dicts.tar.gz "$DICTS_URL"; \
